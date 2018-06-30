@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%block name='head'>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>日志管理</title>
+        <meta name="description" content=""/>
+        <meta name="author" content=""/>
+        <link rel="shortcut icon" href="${STATIC_URL}favicon.ico" type="image/x-icon">
+        <!-- bootstrap css -->
+		    <link href="${STATIC_URL}assets/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
+		    <!-- 禁止bootstrap 响应式 （app根据自身需求启用或禁止bootstrap响应式） -->
+		    <link href="${STATIC_URL}assets/bootstrap-3.3.4/css/bootstrap_noresponsive.css" rel="stylesheet">
+		    <!--自定义css-->
+		    <link href="${STATIC_URL}css/bk.css?v=${STATIC_VERSION}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="${STATIC_URL}css/index.css?v=${STATIC_VERSION}">
+
+	    <link href="https://magicbox.bkclouds.cc/static_api/v3/assets/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
+	    <!-- kendo ui css -->
+	    <link href="https://magicbox.bkclouds.cc/static_api/v3/assets/kendoui-2015.2.624/styles/kendo.common.min.css" rel="stylesheet">
+	    <link href="https://magicbox.bkclouds.cc/static_api/v3/assets/kendoui-2015.2.624/styles/kendo.default.min.css" rel="stylesheet">
+	    <!-- font-awesome -->
+	    <link href="https://magicbox.bkclouds.cc/static_api/v3/assets/fontawesome/css/font-awesome.css" rel="stylesheet">
+	    <!--蓝鲸提供的公用样式库 -->
+	    <link href="https://magicbox.bkclouds.cc/static_api/v3/bk/css/bk.css" rel="stylesheet">
+	    <link href="https://magicbox.bkclouds.cc/static_api/v3/bk/css/bk_pack.css" rel="stylesheet">
+	    <!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+	    <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+	    <!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
+	    <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/echarts-2.0/echarts-all.js"></script>
+	    <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+	    <!-- 包括所有kendoui的js插件或者可以根据需要使用的js插件调用　-->
+	    <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/kendoui-2015.2.624/js/kendo.all.min.js"></script>
+	    <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/echarts-2.0/echarts-all.js"></script>
+	    <script src="https://magicbox.bkclouds.cc/static_api/v3/bk/js/bk.js"></script>
+	    <!-- 数据埋点统计 -->
+	    <script src="https://magicbox.bkclouds.cc/static_api/analysis.js"></script>
+	    <script src="${STATIC_URL}js/csrftoken.js"></script>    
+	    <script src="${STATIC_URL}js/angular.min.js" type="text/javascript"></script>     
+        
+        <!-- 这个是全局配置，如果需要在js中使用app_id和site_url,则这个javascript片段一定要保留 -->
+        <script type="text/javascript">
+	    	  var app_id = "${APP_ID}";
+			    var site_url = "${SITE_URL}";	  // app的url前缀,在ajax调用的时候，应该加上该前缀
+			    var static_url = "${STATIC_URL}"; // 静态资源前缀
+	      </script>
+    </%block>
+  </head>
+
+  <body>
+    <!--顶部导航 Start-->
+    <nav class="navbar navbar-default king-horizontal-nav2 navbar-mt0" role="navigation">
+        <div class="king-layout1-header" style="width: 100%;">
+            <div class="king-instruction  king-instruction-info ">
+                <h5>提示说明</h5>
+                <p>“TCP端口扫描”是基于蓝鲸SAAS应用的一款小工具。具有利用TCP协议对目标服务器的端口进行扫描的功能，可以指定多个端口，以此验证该目标服务器的端口通讯是否正常。<br>
+					&nbsp&nbsp本工具通过celery开发的分布式异步消息任务队列；同时需要注意本工具在正式环境会在安装APPO的服务器进行对目标服务器的扫描，在测试环境会在安装APPT的服务器进行对目标服务器的扫描；</p>
+            </div>
+            <nav role="navigation" class="navbar navbar-default king-horizontal-nav2    f14 ">
+                <div class="container " style="width:100%;overflow:hidden;">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed navbar-toggle-sm" data-toggle="collapse" data-target="#king-horizontal-nav2-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="http://paas.nianhuatech.com:7001">                           
+                            <img src="${STATIC_URL}logo2.png" href="${BK_PAAS_HOST}" alt="" class="logo"> </a>
+                    </div>
+                    <div class="collapse navbar-collapse navbar-responsive-collapse" id="king-horizontal-nav2-collapse">
+                        <ul class="nav navbar-nav">
+                             <%
+			                    ipportscan = appportscan = ''
+			                    relative_path = APP_PATH
+			                    if relative_path == SITE_URL or relative_path.startswith(SITE_URL + "?"):
+			                      ipportscan = 'king-navbar-active'
+			                    elif relative_path.startswith(SITE_URL + "roll_log_conf/"):
+			                      appportscan = 'king-navbar-active'
+			                  %>
+                            <li class="${ipportscan}"><a href="${SITE_URL}">日志管理查询</a></li>
+                            <li class="${appportscan}"><a href="${SITE_URL}roll_log_conf/">日志管理设置</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                 <a href="###" class="avatar">
+                   <img src="${STATIC_URL}img/getheadimg.jpg" width="40" alt="Avatar" class="avatar-img">
+                   % if request.user.is_superuser:
+                       <i class="crown"></i>
+                   % endif
+                   <span>${request.user.username}</span>
+                 </a>
+                 <!--退出登录-->
+                 <a id="logout" href="${LOGOUT_URL}">注销</a>
+                        </ul>
+                    </div>
+                </div>
+            </nav>               
+        </div>
+    </nav>
+    <!--顶部导航 End-->
+    <!-- 固定宽度居中 start -->
+    <%block name='content'></%block>
+    <!-- 固定宽度表单居中 end -->
+    <!-- 尾部声明 start -->
+    <div class="foot" id="footer">
+        <%block name='footerline'></%block>
+        <ul class="links ft">
+            <li>
+                <a id="contact_us" class="link">QQ咨询(800802001)</a>
+                | <a href="http://bbs.bk.tencent.com/forum.php" target="_blank" hotrep="hp.footer.feedback" class="link">蓝鲸论坛</a>
+                | <a href="http://bk.tencent.com/" target="_blank" hotrep="hp.footer.feedback" class="link">蓝鲸官网</a>
+                | <a href="${BK_PLAT_HOST}" target="_blank" hotrep="hp.footer.feedback" class="link">蓝鲸智云工作台</a>
+            </li>
+            <li><p class="copyright">Copyright © 2017-${NOW.year} Tencent BlueKing. All Rights Reserved.</p> </li>
+          <li><p class="copyright">贵州年华 版权所有</p> </li>
+        </ul>
+      </div>
+      <!-- 尾部声明 start -->
+    <!-- jquery js  -->
+    <script src="${STATIC_URL}js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="${STATIC_URL}js/jquery.json-2.3.min.js" type="text/javascript"></script>
+    <!-- bootstrap js  -->
+    <script src="${STATIC_URL}assets/bootstrap-3.3.4/js/bootstrap.min.js" type="text/javascript"></script>
+    <!--配置js  勿删-->
+    <script src="${STATIC_URL}js/settings.js?v=${STATIC_VERSION}" type="text/javascript"></script>
+    ${self.body()}
+    <!-- 兼容性设置 -->
+    <!--[if lt IE 6]>\xe8\x93\x9d\xe9\xb2\xb8\xe6\x99\xba\xe8\x90\xa5\x20\xe7\x89\x88\xe6\x9d\x83\xe6\x89\x80\xe6\x9c\x89<![endif]-->
+  </body>
+</html>

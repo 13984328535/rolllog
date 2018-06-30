@@ -1,0 +1,160 @@
+<%inherit file="/base.html"/>
+
+<%block name="content">
+    <div class="king-page-box">
+	    <form class="form-horizontal">		       	      	          
+	        <div class="form-group clearfix">
+	            <label class="col-sm-3 control-label bk-lh30 pt0">选择业务：</label>
+	            	<div class="col-sm-6" >
+						<select class="form-control bk-valign-top" id="select_apps">
+						</select>
+					</div>
+	        </div>
+	        	        
+            <div class="form-group clearfix">
+            	<label class="col-sm-3 control-label bk-lh30 pt0">选择主机：</label>
+            	<div class="col-sm-6" >
+	                <table class="col-sm-6 table mb0 pr15 ranger-box">
+	                    <tbody>
+	                        <tr>
+	                            <td style="width:30%;">192.168.1.5</td>
+	                            <td style="width:30%;">192.168.1.6</td>
+	                            <td style="width:30%;">192.168.1.7</td>
+	                        </tr>
+	                    </tbody>
+	                </table>
+                </div>
+            </div>
+            
+	        <div class="form-group clearfix">
+	            <label class="col-sm-3 control-label bk-lh30 pt0">设定日志路径和名称：</label>
+	            <div class="col-sm-6">
+	                <input type="text" class="form-control bk-valign-top" id="log_path" placeholder="请输入日志绝对路径及文件名称"> </div>
+	        </div>
+	        <div class="form-group clearfix">
+	            <label class="col-sm-3 control-label bk-lh30 pt0">设定日志大小限制：</label>
+	            <div class="col-sm-6">
+	                <input type="text" class="form-control bk-valign-top" id="log_size" placeholder="请输入日志大小"> </div>
+	        </div>
+	        <div class="form-group clearfix">
+	            <label class="col-sm-3 control-label bk-lh30 pt0">设定检查周期：</label>
+	            <div class="col-sm-6">
+	                <input type="text" class="form-control bk-valign-top" id="log_cron" placeholder="请输入检查周期"> </div>
+	        </div>
+	                                               
+	        <div class="form-group clearfix">
+	            <div class="col-sm-9 col-sm-offset-3">
+	                <button type="button" class="king-btn mr10  king-success" id="bt_save">保存</button>
+	                <button type="button" class="king-btn king-default" id="bt_cancel">取消</button>
+	            </div>
+	        </div>         	           	        
+        </form>
+    </div>
+    <script>
+
+	var ip_source = {}
+	window.onload = get_user_ips;
+	
+    function get_user_ips(){ 　　
+    	$.post("${SITE_URL}get_user_ips/",{
+    		'username':"${request.user.username}",
+    		},function(res){
+    			
+    			if (res.result && res.renum > 0) {	
+    				var apps = Object.keys(res.records);
+    				apps.sort();
+    				
+    				var select_apps = document.getElementById("select_apps");
+    				for (var i = 0; i < apps.length; i++) {
+    					var app_id = document.createElement("option");
+    					app_id.innerHTML = res.records[apps[i]]["app_name"];
+    					app_id.value = apps[i];
+    					select_apps.appendChild(app_id);
+    				}
+    			}else {
+    				alert(res.text);
+    			}
+    		}, 'json');	  
+     	} 　　　      
+    
+
+    
+    
+    
+		   
+    $(function() {
+		$("#bt_scan").click(function() {	
+			var ips = document.getElementsByName("target_ips");			
+		    var ip_seleced = [];
+			for(var i=0; i<ips.length; i++){			
+				if(ips[i].checked==true) {	
+					ip_seleced.push(ips[i].value);
+				}			
+			 }
+			
+			var ip_target = {};
+			var apps = Object.keys(ip_source);
+			for (var i = 0; i < Object.keys(ip_seleced).length; i++) {				
+				for (var j = 0; j < apps.length; j++) {
+					var host_ipo = ip_source[apps[j]]["host_ip"];
+					var app_id = ip_source[apps[j]]["app_id"];
+					var host_ips = Object.keys(host_ipo);
+					for (var k = 0; k < host_ips.length; k++) {	
+						if (ip_seleced[i] == host_ips[k]) {
+							ip_target["app_id"] = app_id;
+							ip_target["ip"] = ip_seleced[i];
+							ip_target["source"] = host_ipo[ip_seleced[i]];
+						}
+					}
+				}
+			}
+			
+			
+			var selecedip = JSON.stringify(ip_target);
+			if (ip_seleced.length > 0){
+				$.post("${SITE_URL}execut_script/",{
+					'selecedip':selecedip
+				},function(res){
+					if (res.result) {
+						//document.getElementById("bt_scan").removeAttribute("disabled");
+					}else {
+						alert(res.text);
+					}
+				}, 'json');	
+			}else{
+				//alert("请选择目标IP");
+			}
+		})
+	})	
+	
+    $(function() {
+		$("#bt_cancel").click(function() {				
+			$.post("${SITE_URL}execute_rolllog_conf/",{
+			},function(res){
+				if (res.result) {
+					alert("ok");
+				}else {
+					alert(res.text);
+				}
+			}, 'json');			
+		})
+	})	
+	
+	$(function() {
+		$("#bt_save").click(function() {				
+			$.post("${SITE_URL}get_script_logs/",{
+			},function(res){
+				if (res.result) {
+					alert("ok");
+				}else {
+					alert(res.text);
+				}
+			}, 'json');			
+		})
+	})	
+		
+      
+    </script>    
+    
+</%block>
+

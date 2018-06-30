@@ -1,0 +1,7 @@
+﻿@charset "utf-8";
+
+/*ui-choose样式，可根据实际项目需求进行调整*/
+select.ui-choose{display: none;}
+ul.ui-choose {font-family:Microsoft YaHei;box-sizing: border-box; display: inline-block; border: 1px solid transparent; font: 100 16px/30px 'microsoft yahei'; border-right: none; border-bottom: none; font-size: 13px; margin: 0; padding: 0; list-style: none; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+ul.ui-choose li { box-sizing: border-box; border: 1px solid #ccc;border-radius:9%; float: left; height: 34px; line-height: 32px; width:120px;margin: -1px 0 0 -1px;margin-left: 16px;margin-bottom: 8px; padding: 0 16px; cursor: pointer; position: relative; z-index: 1; min-width: 20px; text-align: center; background-color: #E4E4E4;}
+.choose-selected {border-color: #0080ff; color: #0080ff;background-color#fff; background: transparent url("../img/icon-selected.png") no-repeat right bottom; }

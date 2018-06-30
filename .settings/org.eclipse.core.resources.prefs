@@ -1,0 +1,14 @@
+eclipse.preferences.version=1
+encoding//blueking/component/apis/cc.py=utf-8
+encoding//blueking/component/shortcuts.py=utf-8
+encoding//conf/default.py=utf-8
+encoding//conf/settings_development.py=utf-8
+encoding//conf/settings_production.py=utf-8
+encoding//conf/settings_testing.py=utf-8
+encoding//home_application/admin.py=utf-8
+encoding//home_application/celery_tasks.py=utf-8
+encoding//home_application/celery_tasks_bk.py=utf-8
+encoding//home_application/models.py=utf-8
+encoding//home_application/urls.py=utf-8
+encoding//home_application/views.py=utf-8
+encoding//home_application/views_bk.py=utf-8

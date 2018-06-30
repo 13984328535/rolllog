@@ -1,0 +1,58 @@
+<%inherit file="/base.html"/>
+
+<%block name="content">
+    <div class="king-page-box">
+	    <form class="form-horizontal">		       	      	          
+	        <div class="form-group clearfix">
+	            <label class="col-sm-3 control-label bk-lh30 pt0">业务名称：</label>
+	            	<div class="col-sm-6" >
+						<select class="form-control bk-valign-top" id="select_apps">
+							<option value ="0">全部业务</option>
+						</select>
+					</div>
+	        </div>	 
+	        
+	        <div class="form-group clearfix">
+	            <label class="col-sm-3 control-label bk-lh30 pt0">主机IP：</label>
+	            <div class="col-sm-6">
+	                <input type="text" class="form-control bk-valign-top" id="log_path" placeholder="根据主机ip过滤，不填不过滤"> </div>
+	        </div>	     
+	        
+	        <div class="form-group clearfix">
+	            <label class="col-sm-3 control-label bk-lh30 pt0">文件名：</label>
+	            <div class="col-sm-6">
+	                <input type="text" class="form-control bk-valign-top" id="log_path" placeholder="根据文件名过滤，不填不过滤"> </div>
+	        </div>	  
+	                                               
+	        <div class="form-group clearfix">
+	            <div class="col-sm-9 col-sm-offset-3">
+	                <button type="button" class="king-btn mr10  king-success" id="bt_save">查询</button>
+	                <button type="button" class="king-btn king-default" id="bt_cancel">取消</button>
+	            </div>
+	        </div>  
+	        
+		    <div class="king-layout2-main mt15" style="width:960px;">
+	            <table class="table mb0 pr15 ranger-box " id="scan_record">
+	                <thead>
+	                    <tr>
+	                        <th>业务名称</th>
+	                        <th>业务主机IP</th>
+	                        <th>文件名称</th>
+	                        <th>文件大小</th>
+	                        <th>最近查询时间</th>
+	                        <th>最近处理时间</th>
+	                        <th>处理结果</th>
+	                    </tr>
+	                </thead>
+	                <tbody> 
+	                </tbody>
+	            </table>         
+	        </div>
+        </form>
+    </div>
+    <script>
+      
+    </script>    
+    
+</%block>
+

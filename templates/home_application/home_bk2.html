@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <!-- 若您需要使用Kendo UI Professional，请联系版权人获得合法的授权或许可。 -->
+    <!-- Bootstrap css -->
+    <link href="https://magicbox.bkclouds.cc/static_api/v3/assets/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <!-- kendo ui css -->
+    <link href="https://magicbox.bkclouds.cc/static_api/v3/assets/kendoui-2015.2.624/styles/kendo.common.min.css" rel="stylesheet">
+    <link href="https://magicbox.bkclouds.cc/static_api/v3/assets/kendoui-2015.2.624/styles/kendo.default.min.css" rel="stylesheet">
+    <!-- font-awesome -->
+    <link href="https://magicbox.bkclouds.cc/static_api/v3/assets/fontawesome/css/font-awesome.css" rel="stylesheet">
+    <!--蓝鲸提供的公用样式库 -->
+    <link href="https://magicbox.bkclouds.cc/static_api/v3/bk/css/bk.css" rel="stylesheet">
+    <link href="https://magicbox.bkclouds.cc/static_api/v3/bk/css/bk_pack.css" rel="stylesheet">
+    <!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+    <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+    <!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
+    <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/echarts-2.0/echarts-all.js"></script>
+    <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <!-- 包括所有kendoui的js插件或者可以根据需要使用的js插件调用　-->
+    <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/kendoui-2015.2.624/js/kendo.all.min.js"></script>
+    <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/echarts-2.0/echarts-all.js"></script>
+    <script src="https://magicbox.bkclouds.cc/static_api/v3/bk/js/bk.js"></script>
+    <!-- 数据埋点统计 -->
+    <script src="https://magicbox.bkclouds.cc/static_api/analysis.js"></script>
+    <script src="${STATIC_URL}js/csrftoken.js"></script>   
+    <!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
+    <!--[if lt IE 9]><script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/html5shiv.min.js"></script><script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/respond.min.js"></script><![endif]-->
+</head>
+
+<body class="bg-white" data-bg-color="bg-white">
+    <div class="king-page-box">
+        <div class="king-layout1-header">
+            <div class="king-instruction  king-instruction-info ">
+                <h5>提示说明</h5>
+                <p>“TCP端口扫描”是基于蓝鲸SAAS应用的一款小工具。具有利用TCP协议对目标服务器的端口进行扫描的功能，可以指定多个端口，以此验证该目标服务器的端口通讯是否正常。<br>
+					&nbsp&nbsp本工具通过celery开发的分布式异步消息任务队列；同时需要注意本工具在正式环境会在安装APPO的服务器进行对目标服务器的扫描，在测试环境会在安装APPT的服务器进行对目标服务器的扫描；</p>
+            </div>
+            <form class="form-horizontal">
+                <nav role="navigation" class="navbar navbar-default king-horizontal-nav2    f14 ">
+                    <div class="container " style="width:100%;overflow:hidden;">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed navbar-toggle-sm" data-toggle="collapse" data-target="#king-horizontal-nav2-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="http://paas.nianhuatech.com:7001">                           
+                                <img src="https://magicbox.bkclouds.cc/static_api/v3/bk/images/logo3.png" href="${BK_PAAS_HOST}" alt="" class="logo"> </a>
+                        </div>
+                        <div class="collapse navbar-collapse navbar-responsive-collapse" id="king-horizontal-nav2-collapse">
+                            <ul class="nav navbar-nav">
+                                <li class="king-navbar-active"><a href="javascript:void(0);">单点IP端口扫描</a></li>
+                                <li class="king-navbar-active"><a href="${SITE_URL}contactus/">批量业务端口扫描</a></li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right">
+			                  <a href="###" class="avatar">
+			                    <img src="${STATIC_URL}img/getheadimg.jpg" width="40" alt="Avatar" class="avatar-img">
+			                    % if request.user.is_superuser:
+			                        <i class="crown"></i>
+			                    % endif
+			                    <span>${request.user.username}</span>
+			                  </a>
+			                  <!--退出登录-->
+			                  <a id="logout" href="${LOGOUT_URL}">注销</a>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>     
+<!--                 <div class="form-group clearfix ">
+                    <label class="col-sm-3 control-label bk-lh30 pt0">源主机名：</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control bk-valign-top" id="source_hostname" placeholder="请输入源主机名,默认所有主机"> </div>
+                </div> -->
+                <div class="form-group clearfix ">
+                    <label class="col-sm-3 control-label bk-lh30 pt0">目标IP：</label>
+	              	<div class="form-group clearfix" id="target_ip">
+<!-- 	                   <label class="col-sm-0 control-select bk-lh30 pt0">
+	                       <input type="checkbox" class="bk-top5" value="邮件">
+	                       <span>192.168.123.123</span>
+	                   </label>   -->               	                   	                                      	                   	                   	                   	                                 
+	                </div>  
+                </div>
+                <div class="form-group clearfix">
+                    <label class="col-sm-3 control-label bk-lh30 pt0">目标端口：</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control bk-valign-top" id="target_port" placeholder="请输入目标端口,多个端口以逗号分隔"> </div>
+                </div>
+                                                       
+                <div class="form-group clearfix">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <button type="button" class="king-btn mr10  king-success" id="bt_scan">开始扫描</button>
+                        <button type="button" class="king-btn king-default" id="bt_scan_cancel">取消</button>
+                    </div>
+                </div>
+            </form>           
+            
+        </div>
+        <div class="king-layout2-main mt15" style="width:960px;">
+            <table class="table mb0 pr15 ranger-box " id="scan_record">
+                <thead>
+                    <tr>
+                        <th>源主机名</th>
+                        <th>目标IP</th>
+                        <th>端口</th>
+                        <th>状态</th>
+                        <th>协议</th>
+                        <th>扫描时间</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                </tbody>
+            </table>         
+        </div>
+    </div>
+    <script>
+      
+    function get_user_ips(){ 　　
+	$.post("${SITE_URL}get_user_ips/",{
+		'username':"${request.user.username}",
+		},function(res){
+			
+			if (res.result && res.renum > 0) {	
+				ip_source = res.records;
+				var apps = Object.keys(res.records);
+				
+				var ip_div = document.getElementById("target_ip");
+				for (var i = 0; i < apps.length; i++) {
+					host_ipo = res.records[apps[i]]["host_ip"];
+					host_ips = Object.keys(host_ipo);
+					host_ips.sort();
+					for (var j = 0; j < host_ips.length; j++) {	
+						var labeli = document.createElement("label");
+						labeli.class = "col-sm-0 control-select bk-lh30 pt0";
+
+						var checkboxi = document.createElement("input");
+						checkboxi.type = "checkbox";  
+						checkboxi.name = "target_ips";  
+						checkboxi.class = "bk-top5";  
+						checkboxi.value = host_ips[j]; 					
+						
+						var spani = document.createElement("span");
+						spani.innerHTML = host_ips[j]; 
+						
+						labeli.appendChild(checkboxi);
+						labeli.appendChild(spani);
+						ip_div.appendChild(labeli);
+					}
+					var br = document.createElement("div");
+					br.innerHTML = "<br/>";
+					ip_div.appendChild(br);
+				}
+			}else {
+				alert(res.text);
+			}
+		}, 'json');	  
+ 	} 　　　  
+	 
+	    
+    $(function() {
+		$("#bt_scan").click(function() {	
+			var ips = document.getElementsByName("target_ips");			
+		    var ip_seleced = [];
+			for(var i=0; i<ips.length; i++){			
+				if(ips[i].checked==true) {	
+					ip_seleced.push(ips[i].value);
+				}			
+			 }
+			
+			var ip_target = {};
+			var apps = Object.keys(ip_source);
+			for (var i = 0; i < Object.keys(ip_seleced).length; i++) {				
+				for (var j = 0; j < apps.length; j++) {
+					var host_ipo = ip_source[apps[j]]["host_ip"];
+					var app_id = ip_source[apps[j]]["app_id"];
+					var host_ips = Object.keys(host_ipo);
+					for (var k = 0; k < host_ips.length; k++) {	
+						if (ip_seleced[i] == host_ips[k]) {
+							ip_target["app_id"] = app_id;
+							ip_target["ip"] = ip_seleced[i];
+							ip_target["source"] = host_ipo[ip_seleced[i]];
+						}
+					}
+				}
+			}
+			
+			
+			var selecedip = JSON.stringify(ip_target);
+			if (ip_seleced.length > 0){
+				$.post("${SITE_URL}execut_script/",{
+					'selecedip':selecedip
+				},function(res){
+					if (res.result) {
+						//document.getElementById("bt_scan").removeAttribute("disabled");
+					}else {
+						alert(res.text);
+					}
+				}, 'json');	
+			}else{
+				alert("请选择目标IP");
+			}
+		})
+	})	
+	
+	var ip_source = {}
+	window.onload = get_user_ips;
+
+    $(function() {
+		$("#bt_scan_cancel").click(function() {				
+			$.post("${SITE_URL}get_script_logs/",{
+			},function(res){
+				if (res.result) {
+					alert("ok");
+				}else {
+					alert(res.text);
+				}
+			}, 'json');			
+		})
+	})	
+		
+	
+
+      
+    </script>
+</body>
+
+</html>

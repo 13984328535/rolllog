@@ -1,0 +1,71 @@
+<%inherit file="/base.html"/>
+
+<%block name="content">
+	<script>var globle_username = '${request.user.username}';</script>	
+	<link href="${STATIC_URL}css/roll-log-conf.css" rel="stylesheet">
+	<script src="${STATIC_URL}js/roll-log-conf.js" type="text/javascript"></script>
+	<script src="${STATIC_URL}layer/layer.js" type="text/javascript"></script>
+    <div class="king-page-box">
+	    <form class="form-horizontal">		       	      	          
+	        <div class="form-group clearfix">
+	            <label class="col-sm-3 control-label bk-lh30 pt0">选择业务：</label>
+	            	<div class="col-sm-6" >
+						<select class="form-control bk-valign-top" id="select_apps">
+						</select>
+					</div>
+	        </div>
+	        	        
+            <div class="form-group clearfix">
+            	<label class="col-sm-3 control-label bk-lh30 pt0">选择主机：</label>
+            	<div class="col-sm-6">
+	                <table class="col-sm-6 table mb0 pr15 ranger-box">
+	                    <tbody>
+	                        <tr>
+	                        	<td style="border: 1px solid #CCCCCC;">
+	                        		<ul class="ui-choose choose-type-right" id="select_ips">
+	                        		</ul>
+	                            </td>
+	                        </tr>
+	                    </tbody>
+	                </table>
+                </div>
+            </div>
+            
+	        <div class="form-group clearfix">
+	            <label class="col-sm-3 control-label bk-lh30 pt0">设定日志路径和名称：</label>
+	            <div class="col-sm-6">
+	                <input type="text" class="form-control bk-valign-top" id="log_path" placeholder="请输入日志绝对路径及文件名称"> </div>
+	        </div>
+	        <div class="form-group clearfix">
+	            <label class="col-sm-3 control-label bk-lh30 pt0">设定日志大小限制：</label>
+	            <div class="col-sm-2">
+	                <input type="text" class="form-control bk-valign-top" id="log_size" placeholder="请输入日志大小(单位：M)">
+	            </div>
+	            <div class="col-sm-6">
+	            	<div class="form-group clearfix">
+			            <label class="col-sm-4 control-label bk-lh30 pt0">设定检查周期：</label>
+			            <div class="col-sm-8">
+			            	<div class="row">
+						      <div class="col-md-3"><input type="text" class="form-control bk-valign-top" style="width: 100%;margin: 0px;" id="timeNum" placeholder="请输入检查周期"></div>
+						      <div class="col-md-3">
+									<select name="TimeType" id="timeType" class="form-control bk-valign-top">
+										<option value="day">天</option>
+										<option value="hour">小时</option>
+										<option value="minute">分钟</option>
+									</select>
+							  </div>  
+						   </div>
+			            </div>
+			        </div>
+	            </div>
+	        </div>
+	        <div class="form-group clearfix">
+	            <div class="col-sm-9 col-sm-offset-3">
+	                <button type="button" class="king-btn mr10  king-success" id="bt_save">保存</button>
+	                <button type="button" class="king-btn king-default" id="bt_cancel">取消</button>
+	            </div>
+	        </div>         	           	        
+        </form>
+    </div> 
+</%block>
+
