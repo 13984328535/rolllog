@@ -54,8 +54,6 @@ window.onload = get_user_biz;
 	                            cell = row.insertCell();
 	                            cell.innerHTML=(records[i].scan_log_size == -1?"":((records[i].scan_log_size/1024/1024).toFixed(2)+"M")) ;   
 	                            cell = row.insertCell();
-	                            cell.innerHTML=(records[i].do_time == "None"? "": records[i].do_time);    
-	                            cell = row.insertCell();
 	                            var exitCode = "操作异常"
 	                            if (records[i].do_result == -1) { exitCode = "未操作";
 								}else if (records[i].do_result == 3) { exitCode = "文件未找到";									
@@ -63,6 +61,8 @@ window.onload = get_user_biz;
 								}else if (records[i].do_result == 255) { exitCode = "文件较小";
 								}else{exitCode = "操作异常";}
 	                            cell.innerHTML=exitCode;    
+	                            cell = row.insertCell();
+	                            cell.innerHTML=(records[i].do_time == "None"? "": records[i].do_time);    	                            
 	                            cell = row.insertCell();
 	                            cell.innerHTML='<input class="btn btn-danger" style="width: 55px;" value="删除" onclick="delIt(this,\''+records[i].id+'\');"/>'; 	                            	                            	                           
 		                    }  	    						    				
