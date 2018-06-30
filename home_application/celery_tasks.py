@@ -33,9 +33,9 @@ def execute_rolllog_logs():
     logger.error(u"celery execute_rolllog_logs 周期任务调用开始，当前时间：{}".format(now)) 
     rolllog = RollLog.objects.filter(is_get_result=0)
     if len(rolllog) == 0:
-        return    
-    for log in rolllog:  
-        client = get_client_by_user(log.username)      
+        return
+    for log in rolllog:     
+        client = get_client_by_user(log.username)    
         kwargs = {
             "task_instance_id": log.task_instance_id         
         }
@@ -43,14 +43,12 @@ def execute_rolllog_logs():
         ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
         exitCode = ipLogContent.get('exitCode')
         if exitCode == 255 or exitCode == 0:     
-            #startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%dT%H:%M:%S") 
-            now = datetime.datetime.now()
+            startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%d %H:%M:%S") 
             logContent = ipLogContent.get('logContent') 
-            #logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
-            #RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=now,is_get_result=1)
-            RollLog.objects.filter(id=log.id).update(do_result=exitCode,do_time=now,is_get_result=1)
+            logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
+            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=startTime,is_get_result=1)
         elif exitCode == 3:
-            RollLog.objects.filter(id=log.id).update(do_result=exitCode,is_get_result=1)
+            RollLog.objects.filter(id=log.id).update(do_result=exitCode,is_get_result=1)  
 
 @periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
 def execute_rolllog_conf():
