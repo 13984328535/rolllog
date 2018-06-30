@@ -52,7 +52,7 @@ window.onload = get_user_biz;
 	                            cell = row.insertCell();
 	                            cell.innerHTML=(records[i].scan_time == "None"? "": records[i].scan_time);
 	                            cell = row.insertCell();
-	                            cell.innerHTML=(records[i].scan_log_size == -1?((records[i].scan_log_size/1024/1024).toFixed(2)+"M"):"") ;   
+	                            cell.innerHTML=(records[i].scan_log_size == -1?"":((records[i].scan_log_size/1024/1024).toFixed(2)+"M")) ;   
 	                            cell = row.insertCell();
 	                            cell.innerHTML=(records[i].do_time == "None"? "": records[i].do_time);    
 	                            cell = row.insertCell();
