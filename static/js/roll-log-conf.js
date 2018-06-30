@@ -163,7 +163,7 @@ $(function() {
 		$("#select_ips li").each(function(){
 			$(this).removeClass("choose-selected");
 		});
-//		$.post(site_url+"execute_rolllog_conf/",{
+//		$.post(site_url+"get_script_logs/",{
 //		},function(res){
 //			if (res.result) {
 //				alert("ok");
