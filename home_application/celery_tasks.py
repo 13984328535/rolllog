@@ -46,6 +46,7 @@ def execute_rolllog_logs():
             #startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%dT%H:%M:%S") 
             now = datetime.datetime.now()
             logContent = ipLogContent.get('logContent') 
+            logger.error(u"logContent="+logContent) 
             logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
             RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=now,is_get_result=1)
         elif exitCode == 3:
