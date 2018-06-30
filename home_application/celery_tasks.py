@@ -14,7 +14,6 @@ celery 任务示例
 周期性任务还需要启动celery调度命令：python  manage.py  celerybeat --settings=settings
 """
 import datetime
-
 from celery import task
 from celery.schedules import crontab
 from celery.task import periodic_task
@@ -22,7 +21,7 @@ from common.log import logger
 from blueking.component.shortcuts import get_client_by_user
 from conf.default import STATICFILES_DIRS
 from home_application.models import RollLog
-import os,base64,copy,datetime,re,json
+import os,base64,copy,re,json
 
 @periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
 def execute_rolllog_logs():
@@ -44,7 +43,8 @@ def execute_rolllog_logs():
         ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
         exitCode = ipLogContent.get('exitCode')
         if exitCode == 255 or exitCode == 0:     
-            startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%d %H:%M:%S") 
+            print ipLogContent.get('startTime');
+            startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%dT%H:%M:%S") 
             logContent = ipLogContent.get('logContent') 
             logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
             RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=startTime,is_get_result=1)
