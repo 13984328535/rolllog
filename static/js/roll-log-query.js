@@ -50,13 +50,19 @@ window.onload = get_user_biz;
 	                            cell = row.insertCell();
 	                            cell.innerHTML=records[i].log_size;	                            
 	                            cell = row.insertCell();
-	                            cell.innerHTML=records[i].scan_time;
+	                            cell.innerHTML=(records[i].scan_time == "None"? "": records[i].scan_time);
 	                            cell = row.insertCell();
 	                            cell.innerHTML=records[i].scan_log_size;   
 	                            cell = row.insertCell();
-	                            cell.innerHTML=records[i].do_time;    
+	                            cell.innerHTML=(records[i].do_time == "None"? "": records[i].do_time);    
 	                            cell = row.insertCell();
-	                            cell.innerHTML=records[i].do_result;    
+	                            var exitCode = "操作异常"
+	                            if (records[i].do_result == -1) { exitCode = "未操作";
+								}else if (records[i].do_result == 3) { exitCode = "文件未找到";									
+								}else if (records[i].do_result == 0) { exitCode = "操作成功";								
+								}else if (records[i].do_result == 255) { exitCode = "文件较小";
+								}else{exitCode = "操作异常";}
+	                            cell.innerHTML=exitCode;    
 	                            cell = row.insertCell();
 	                            cell.innerHTML='<input class="btn btn-danger" style="width: 55px;" value="删除" onclick="delIt(this,\''+records[i].id+'\');"/>'; 	                            	                            	                           
 		                    }  	    						    				

@@ -10,27 +10,27 @@ See the License for the specific language governing permissions and limitations 
 """
 
 from common.mymako import render_mako_context, render_json
-from blueking.component.shortcuts import get_client_by_request
+from blueking.component.shortcuts import get_client_by_request,get_client_by_user
 from doctest import script_from_examples
 from conf.default import STATICFILES_DIRS
 from home_application.models import RollLog
 import os,base64,copy,datetime,re,json
 
-def execute_rolllog(request,conf):
+def execute_rolllog(conf):
     staticdir = ','.join(STATICFILES_DIRS);
     script_path = os.path.join(staticdir, str('script'))
     file = os.path.join(script_path, 'roll_log.sh')
     with open(file) as f:
         script_content = f.read()
     f.close()
-    
+     
     biz_ips = {}
     biz_ips["ip"] = conf.biz_ip;
     biz_ips["source"] = conf.biz_ip_source;
     ip_list = [];
     ip_list.append(biz_ips);
     param = '%s %s' % (conf.log_path, conf.log_size)
-    client = get_client_by_request(request)
+    client = get_client_by_user(conf.username)
     kwargs = {
         "username":conf.username, 
         "app_id":conf.biz_id,
@@ -53,24 +53,17 @@ def execute_rolllog_conf(request):
         return
     now = datetime.datetime.now()
     for conf in rolllog:
-        if conf.scan_time is None:
-            print "scan_time" 
         if (conf.scan_time is None) or ((now - conf.scan_time).seconds >= conf.roll_cron):
-            execute_rolllog(request,conf)
-        
-    return render_json({'result':True}); 
-
-#     target_ports = str(target_port).split(',')
-#     for target_port in target_ports:
-#         t = Thread(target = nmapScan,args = (str(host), str(target_ip), str(target_port)))
-#         t.start()  
+            execute_rolllog(conf)
+         
+    return render_json({'result':True});   
 
 def get_script_logs(request):
     rolllog = RollLog.objects.filter(is_get_result=0)
     if len(rolllog) == 0:
         return
-    client = get_client_by_request(request)
-    for log in rolllog:        
+    for log in rolllog:     
+        client = get_client_by_user(log.username)    
         kwargs = {
             "task_instance_id": log.task_instance_id         
         }
@@ -81,9 +74,9 @@ def get_script_logs(request):
             startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%d %H:%M:%S") 
             logContent = ipLogContent.get('logContent') 
             logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
-        RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=startTime,is_get_result=1)
-
-    
+            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=startTime,is_get_result=1)
+        elif exitCode == 3:
+            RollLog.objects.filter(id=log.id).update(do_result=exitCode,is_get_result=1)        
     return render_json({'result':True});    
 
 def save_rolllog(request):
@@ -200,7 +193,25 @@ def get_roll_logs(request):
     if username == "":
         return render_json({'result':False, 'ret_text':"未获取到用户信息"});      
     try: 
-        rolllog = RollLog.objects.all() 
+        if biz_id == "0":
+            if biz_ip == "" and file_name == "":
+                rolllog = RollLog.objects.all() 
+            if biz_ip != "" and file_name == "":
+                rolllog = RollLog.objects.filter(biz_ip=biz_ip)
+            if biz_ip == "" and file_name != "":
+                rolllog = RollLog.objects.filter(log_path__contains=file_name)
+            if biz_ip != "" and file_name != "":
+                rolllog = RollLog.objects.filter(biz_ip=biz_ip,log_path__contains=file_name)                
+        else:  
+            if biz_ip == "" and file_name == "":
+                rolllog = RollLog.objects.filter(biz_id=biz_id)
+            if biz_ip != "" and file_name == "":
+                rolllog = RollLog.objects.filter(biz_id=biz_id,biz_ip=biz_ip)
+            if biz_ip == "" and file_name != "":
+                rolllog = RollLog.objects.filter(biz_id=biz_id,log_path__contains=file_name)  
+            if biz_ip != "" and file_name != "":
+                rolllog = RollLog.objects.filter(biz_id=biz_id,biz_ip=biz_ip,log_path__contains=file_name)                               
+                
         ret_num = len(rolllog);             
     except:
         ret_code = False;

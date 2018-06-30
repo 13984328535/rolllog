@@ -158,14 +158,18 @@ $(function() {
 });	
 
 $(function() {
-	$("#bt_cancel").click(function() {				
-		$.post(site_url+"get_script_logs/",{
-		},function(res){
-			if (res.result) {
-				alert("ok");
-			}else {
-				alert(res.text);
-			}
-		}, 'json');			
+	$("#bt_cancel").click(function() {	
+		sel_ips=[]; //清空上一次选择
+		$("#select_ips li").each(function(){
+			$(this).removeClass("choose-selected");
+		});
+//		$.post(site_url+"execute_rolllog_conf/",{
+//		},function(res){
+//			if (res.result) {
+//				alert("ok");
+//			}else {
+//				alert(res.text);
+//			}
+//		}, 'json');			
 	});
 });

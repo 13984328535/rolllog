@@ -19,23 +19,81 @@ from celery import task
 from celery.schedules import crontab
 from celery.task import periodic_task
 from common.log import logger
-from home_application.models import RollLogConf
+from blueking.component.shortcuts import get_client_by_user
+from home_application.models import RollLog
+import os,base64,copy,datetime,re,json
 
 @periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
-def execute_rolllog():
+def execute_rolllog_logs():
     """
     celery 周期任务
     """
     execute_task()
     now = datetime.datetime.now()
-    logger.error(u"celery execute_rolllog 周期任务调用开始，当前时间：{}".format(now)) 
-    last_scantask = RollLogConf.objects.filter()
-    if(last_scantask.id <= PortScanPara_id):
+    logger.error(u"celery execute_rolllog_logs 周期任务调用开始，当前时间：{}".format(now)) 
+    rolllog = RollLog.objects.filter(is_get_result=0)
+    if len(rolllog) == 0:
+        return    
+    for log in rolllog:  
+        client = get_client_by_user(log.username)      
+        kwargs = {
+            "task_instance_id": log.task_instance_id         
+        }
+        result = client.job.get_task_ip_log(kwargs);
+        ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
+        exitCode = ipLogContent.get('exitCode')
+        if exitCode == 255 or exitCode == 0:     
+            startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%d %H:%M:%S") 
+            logContent = ipLogContent.get('logContent') 
+            logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
+            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=startTime,is_get_result=1)
+        elif exitCode == 3:
+            RollLog.objects.filter(id=log.id).update(do_result=exitCode,is_get_result=1)
+
+@periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
+def execute_rolllog_conf():
+    """
+    celery 周期任务
+    """
+    execute_task()
+    now = datetime.datetime.now()
+    logger.error(u"celery execute_rolllog_conf 周期任务调用开始，当前时间：{}".format(now)) 
+    rolllog = RollLog.objects.all()
+    if len(rolllog) == 0:
         return
-    target_ports = str(target_port).split(',')
-    for target_port in target_ports:
-        t = Thread(target = nmapScan,args = (str(host), str(target_ip), str(target_port)))
-        t.start()  
+    now = datetime.datetime.now()
+    for conf in rolllog:
+        if (conf.scan_time is None) or ((now - conf.scan_time).seconds >= conf.roll_cron):
+            execute_rolllog(conf)
+
+def execute_rolllog(conf):
+    staticdir = ','.join(STATICFILES_DIRS);
+    script_path = os.path.join(staticdir, str('script'))
+    file = os.path.join(script_path, 'roll_log.sh')
+    with open(file) as f:
+        script_content = f.read()
+    f.close()
+    
+    biz_ips = {}
+    biz_ips["ip"] = conf.biz_ip;
+    biz_ips["source"] = conf.biz_ip_source;
+    ip_list = [];
+    ip_list.append(biz_ips);
+    param = '%s %s' % (conf.log_path, conf.log_size)
+    client = get_client_by_user(conf.username)
+    kwargs = {
+        "username":conf.username, 
+        "app_id":conf.biz_id,
+        "content":base64.encodestring(script_content),
+        "script_param":param,
+        "ip_list":ip_list, "type":1, "account":'root',            
+    }
+    result = client.job.fast_execute_script(kwargs);
+    if result['code'] != 0:
+        return render_json({'result':False});
+    task_instance_id = result['data']['taskInstanceId']
+    now = datetime.datetime.now()
+    RollLog.objects.filter(id=conf.id).update(scan_time=now,task_instance_id=task_instance_id,is_get_result=0)
         
 
 @task()
@@ -75,4 +133,5 @@ def get_time():
     execute_task()
     now = datetime.datetime.now()
     logger.error(u"celery 周期任务调用成功，当前时间：{}".format(now))
+    
         
