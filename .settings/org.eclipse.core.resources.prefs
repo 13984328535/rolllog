@@ -1,5 +1,7 @@
 eclipse.preferences.version=1
+encoding//blueking/component/apis/bk_paas.py=utf-8
 encoding//blueking/component/apis/cc.py=utf-8
+encoding//blueking/component/base.py=utf-8
 encoding//blueking/component/shortcuts.py=utf-8
 encoding//conf/default.py=utf-8
 encoding//conf/settings_development.py=utf-8

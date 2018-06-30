@@ -20,6 +20,7 @@ from celery.schedules import crontab
 from celery.task import periodic_task
 from common.log import logger
 from blueking.component.shortcuts import get_client_by_user
+from conf.default import STATICFILES_DIRS
 from home_application.models import RollLog
 import os,base64,copy,datetime,re,json
 
