@@ -60,7 +60,7 @@ def execute_rolllog_conf():
     execute_task()
     now = datetime.datetime.now()
     logger.error(u"celery execute_rolllog_conf 周期任务调用开始，当前时间：{}".format(now)) 
-    rolllog = RollLog.objects.all()
+    rolllog = RollLog.objects.filter(is_get_result=1)
     if len(rolllog) == 0:
         return
     now = datetime.datetime.now()
