@@ -53,8 +53,8 @@
         <div class="king-layout1-header" style="width: 100%;">
             <div class="king-instruction  king-instruction-info ">
                 <h5>提示说明</h5>
-                <p>“TCP端口扫描”是基于蓝鲸SAAS应用的一款小工具。具有利用TCP协议对目标服务器的端口进行扫描的功能，可以指定多个端口，以此验证该目标服务器的端口通讯是否正常。<br>
-					&nbsp&nbsp本工具通过celery开发的分布式异步消息任务队列；同时需要注意本工具在正式环境会在安装APPO的服务器进行对目标服务器的扫描，在测试环境会在安装APPT的服务器进行对目标服务器的扫描；</p>
+                <p>日志管理工具通过celery定时读取配置数据, 调用快速执行脚本的api, 对日志大小进行检查, 当大于阀值时, 对日志进行滚动处理。<br>
+				       脚本执行和结果获取是异步过程, 因此通过另一个定时任务获取结果, 最终结合配置和结果数据, 展示日志管理状态数据。</p>
             </div>
             <nav role="navigation" class="navbar navbar-default king-horizontal-nav2    f14 ">
                 <div class="container " style="width:100%;overflow:hidden;">
