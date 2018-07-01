@@ -70,13 +70,17 @@ def get_script_logs(request):
         result = client.job.get_task_ip_log(kwargs);
         ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
         exitCode = ipLogContent.get('exitCode')
-        if exitCode == 255 or exitCode == 0 or exitCode == 1:     
-            startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%d %H:%M:%S") 
+        if exitCode == 3:
+            RollLog.objects.filter(id=log.id).update(scan_log_size=-1,scan_result=exitCode,is_get_result=1)  
+        elif exitCode == 1:
             logContent = ipLogContent.get('logContent') 
             logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
-            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=startTime,is_get_result=1)
-        elif exitCode == 3:
-            RollLog.objects.filter(id=log.id).update(do_result=exitCode,is_get_result=1)        
+            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,scan_result=exitCode,is_get_result=1)
+        else:     
+            startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%dT%H:%M:%S") 
+            logContent = ipLogContent.get('logContent') 
+            logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
+            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=startTime,is_get_result=1)            
     return render_json({'result':True});    
 
 def save_rolllog(request):
@@ -138,9 +142,11 @@ def get_user_ips(request):
                     record["app_name"] = app_name;
                     host_ip.clear();
                     for host in hosts.get('data'):
-                        InnerIP = host.get('InnerIP')
-                        Source = host.get('Source')
-                        host_ip[InnerIP] = Source;   
+                        osType = host.get('osType')
+                        if osType == "linux":
+                            InnerIP = host.get('InnerIP')
+                            Source = host.get('Source')
+                            host_ip[InnerIP] = Source;   
                     ret_num += len(host_ip.keys());                 
                     record["host_ip"] = copy.deepcopy(host_ip);
                 records[str(app_id)] = copy.deepcopy(record);

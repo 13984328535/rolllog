@@ -50,10 +50,10 @@ def execute_rolllog_logs():
             logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
             RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,scan_result=exitCode,is_get_result=1)
         else:     
-            startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%dT%H:%M:%S") 
+            #startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%dT%H:%M:%S") 
             logContent = ipLogContent.get('logContent') 
             logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
-            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=startTime,is_get_result=1)            
+            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=now,is_get_result=1)            
             
 
 @periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
