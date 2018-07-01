@@ -38,16 +38,19 @@
 	        </div>
 	        <div class="form-group clearfix">
 	            <label class="col-sm-3 control-label bk-lh30 pt0">设定日志大小限制：</label>
-	            <div class="col-sm-2">
-	                <input type="text" class="form-control bk-valign-top" id="log_size" placeholder="请输入日志大小(单位：M)">
-	            </div>
+				<div class="col-sm-2">
+	            	<div class="row">
+	            		<div class="col-sm-10"><input type="text" class="form-control bk-valign-top" id="log_size" placeholder="请输入日志大小"></div>
+	            		<div class="col-sm-1" style="margin-top: 5px;text-align: left;margin-left: 0px;">M</div>
+	            	</div>
+	            </div>            
 	            <div class="col-sm-6">
 	            	<div class="form-group clearfix">
 			            <label class="col-sm-4 control-label bk-lh30 pt0">设定检查周期：</label>
 			            <div class="col-sm-8">
 			            	<div class="row">
-						      <div class="col-md-3"><input type="text" class="form-control bk-valign-top" style="width: 100%;margin: 0px;" id="timeNum" placeholder="请输入检查周期"></div>
-						      <div class="col-md-3">
+						      <div class="col-md-4"><input type="text" class="form-control bk-valign-top" style="width: 100%;margin: 0px;" id="timeNum" placeholder="请输入检查周期"></div>
+						      <div class="col-md-2">
 									<select name="TimeType" id="timeType" class="form-control bk-valign-top">
 										<option value="day">天</option>
 										<option value="hour">小时</option>

@@ -25,7 +25,7 @@ class RollLog(models.Model):
     scan_log_size = models.BigIntegerField(u"检查时文件大小", default=-1)
     do_time = models.DateTimeField(u"最后处理日志时间", null=True, blank=True)
     do_result = models.IntegerField(u"处理结果", default=-1)
-    is_get_result = models.IntegerField(u"是否获取结果", default=0)
+    is_get_result = models.IntegerField(u"是否获取结果", default=1)
     task_instance_id = models.BigIntegerField(u"最后任务实例ID", null=True, blank=True)
 
     

@@ -56,7 +56,7 @@ window.onload = get_user_biz;
 	                            cell = row.insertCell();
 	                            var exitCode = "操作异常"
 	                            if (records[i].do_result == -1) { exitCode = "未操作";
-								}else if (records[i].do_result == 3) { exitCode = "文件未找到";									
+								}else if (records[i].do_result == 3) { exitCode = "文件未生成";									
 								}else if (records[i].do_result == 0) { exitCode = "操作成功";								
 								}else if (records[i].do_result == 255) { exitCode = "文件较小";
 								}else{exitCode = "操作异常";}
