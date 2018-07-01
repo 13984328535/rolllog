@@ -51,15 +51,22 @@ window.onload = get_user_biz;
 	                            cell.innerHTML=(records[i].log_size/1024/1024)+"M";	                            
 	                            cell = row.insertCell();
 	                            cell.innerHTML=(records[i].scan_time == "None"? "": records[i].scan_time);
+
+	                            var scanExitCode = "检查文件异常"
+	                            if (records[i].scan_result == -1) { scanExitCode = "未开始检查";
+								}else if (records[i].scan_result == 3) { scanExitCode = "文件未生成";																
+								}else{scanExitCode = "文件小于阀值";}
+	                            
 	                            cell = row.insertCell();
-	                            cell.innerHTML=(records[i].scan_log_size == -1?"":((records[i].scan_log_size/1024/1024).toFixed(2)+"M")) ;   
+	                            cell.innerHTML=records[i].scan_result == 3? exitCode:((records[i].scan_log_size == -1?"":((records[i].scan_log_size/1024/1024).toFixed(2)+"M"))) ;   	                            
+	                            
+	                            var doExitCode = "操作异常"
+	                            if (records[i].do_result == -1) { doExitCode = "未扫描";
+								}else if (records[i].do_result == 0) { doExitCode = "操作正常";																
+								}else{doExitCode = "操作异常";}
+	                            
 	                            cell = row.insertCell();
-	                            var exitCode = "操作异常"
-	                            if (records[i].do_result == -1) { exitCode = "未操作";
-								}else if (records[i].do_result == 3) { exitCode = "文件未生成";									
-								}else if (records[i].do_result == 0) { exitCode = "操作成功";								
-								}else{exitCode = "文件小于阀值";}
-	                            cell.innerHTML=exitCode;    
+	                            cell.innerHTML=doExitCode;    
 	                            cell = row.insertCell();
 	                            cell.innerHTML=(records[i].do_time == "None"? "": records[i].do_time);    	                            
 	                            cell = row.insertCell();

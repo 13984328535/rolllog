@@ -42,17 +42,18 @@ def execute_rolllog_logs():
         result = client.job.get_task_ip_log(kwargs);
         ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
         exitCode = ipLogContent.get('exitCode')
-        if exitCode == 0:     
-            startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%dT%H:%M:%S") 
-            logContent = ipLogContent.get('logContent') 
-            logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
-            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=startTime,is_get_result=1)
-        elif exitCode == 3:
-            RollLog.objects.filter(id=log.id).update(scan_log_size=-1,do_result=exitCode,is_get_result=1)  
+
+        if exitCode == 3:
+            RollLog.objects.filter(id=log.id).update(scan_log_size=-1,scan_result=exitCode,is_get_result=1)  
         elif exitCode == 1:
             logContent = ipLogContent.get('logContent') 
             logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
-            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,is_get_result=1)
+            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,scan_result=exitCode,is_get_result=1)
+        else:     
+            startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%dT%H:%M:%S") 
+            logContent = ipLogContent.get('logContent') 
+            logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
+            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=startTime,is_get_result=1)            
             
 
 @periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))

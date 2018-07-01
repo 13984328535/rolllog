@@ -23,6 +23,7 @@ class RollLog(models.Model):
     username = models.CharField(u"用户名", max_length=40)
     scan_time = models.DateTimeField(u"最后检查时间", null=True, blank=True)
     scan_log_size = models.BigIntegerField(u"检查时文件大小", default=-1)
+    scan_result = models.IntegerField(u"检查结果", default=-1)
     do_time = models.DateTimeField(u"最后处理日志时间", null=True, blank=True)
     do_result = models.IntegerField(u"处理结果", default=-1)
     is_get_result = models.IntegerField(u"是否获取结果", default=1)

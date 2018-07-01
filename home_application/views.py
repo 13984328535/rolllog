@@ -48,7 +48,7 @@ def execute_rolllog(conf):
     return render_json({'result':True});
 
 def execute_rolllog_conf(request):
-    rolllog = RollLog.objects.all()
+    rolllog = RollLog.objects.filter(is_get_result=1)
     if len(rolllog) == 0:
         return
     now = datetime.datetime.now()
@@ -70,7 +70,7 @@ def get_script_logs(request):
         result = client.job.get_task_ip_log(kwargs);
         ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
         exitCode = ipLogContent.get('exitCode')
-        if exitCode == 255 or exitCode == 0:     
+        if exitCode == 255 or exitCode == 0 or exitCode == 1:     
             startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%d %H:%M:%S") 
             logContent = ipLogContent.get('logContent') 
             logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
@@ -223,7 +223,7 @@ def get_roll_logs(request):
         
     logs = [];
     for log in rolllog:  
-        logs.append({'id':log.id,'biz_name':log.biz_name,'biz_ip':log.biz_ip,'log_path':log.log_path,'log_size':log.log_size,'scan_time':str(log.scan_time),'scan_log_size':log.scan_log_size,'do_time':str(log.do_time),'do_result':log.do_result})  
+        logs.append({'id':log.id,'biz_name':log.biz_name,'biz_ip':log.biz_ip,'log_path':log.log_path,'log_size':log.log_size,'scan_time':str(log.scan_time),'scan_log_size':log.scan_log_size,'scan_result':log.scan_result,'do_time':str(log.do_time),'do_result':log.do_result})  
     records = json.dumps(logs) 
          
     return render_json({'result':ret_code, 'text':ret_text,  'renum':ret_num , 'records':records});
