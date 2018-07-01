@@ -58,8 +58,7 @@ window.onload = get_user_biz;
 	                            if (records[i].do_result == -1) { exitCode = "未操作";
 								}else if (records[i].do_result == 3) { exitCode = "文件未生成";									
 								}else if (records[i].do_result == 0) { exitCode = "操作成功";								
-								}else if (records[i].do_result == 255) { exitCode = "文件较小";
-								}else{exitCode = "操作异常";}
+								}else{exitCode = "文件小于阀值";}
 	                            cell.innerHTML=exitCode;    
 	                            cell = row.insertCell();
 	                            cell.innerHTML=(records[i].do_time == "None"? "": records[i].do_time);    	                            
