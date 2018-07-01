@@ -53,7 +53,8 @@
         <div class="king-layout1-header" style="width: 100%;">
             <div class="king-instruction  king-instruction-info ">
                 <h5>提示说明</h5>
-                <p>日志管理工具通过celery定时读取配置数据, 调用快速执行脚本的api, 对日志大小进行检查, 当大于阀值时, 对日志进行滚动处理。<br>
+                <p>一些三方软件日志持续增大, 没有相应的管理。仅仅通过定期删除的方式, 无法保留足够分析问题的日志量。本应用通过对这些重要日志做定期检查, 当日志超过一定大小后, 做日志文件序号循环处理。<br>
+                                        本日志管理工具通过celery定时读取配置数据, 调用快速执行脚本的api, 对日志大小进行检查, 当大于阀值时, 对日志进行序号循环处理。<br>
 				       脚本执行和结果获取是异步过程, 因此通过另一个定时任务获取结果, 最终结合配置和结果数据, 展示日志管理状态数据。</p>
             </div>
             <nav role="navigation" class="navbar navbar-default king-horizontal-nav2    f14 ">
