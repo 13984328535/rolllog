@@ -43,7 +43,7 @@ def execute_rolllog_logs():
         ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
         exitCode = ipLogContent.get('exitCode')
         if exitCode == 0:     
-            startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%d %H:%M:%S") 
+            startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%dT%H:%M:%S") 
             logContent = ipLogContent.get('logContent') 
             logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
             RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=startTime,is_get_result=1)
