@@ -48,7 +48,9 @@ window.onload = get_user_biz;
 	                            cell = row.insertCell();
 	                            cell.innerHTML=records[i].log_path;
 	                            cell = row.insertCell();
-	                            cell.innerHTML=(records[i].log_size/1024/1024)+"M";	                            
+	                            cell.innerHTML=(records[i].log_size/1024/1024)+"M";	   
+	                            cell = row.insertCell();
+	                            cell.innerHTML=records[i].roll_cron_detail;	 	                            
 	                            cell = row.insertCell();
 	                            cell.innerHTML=(records[i].scan_time == "None"? "": records[i].scan_time);
 

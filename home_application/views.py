@@ -16,73 +16,6 @@ from conf.default import STATICFILES_DIRS
 from home_application.models import RollLog
 import os,base64,copy,datetime,re,json
 
-def execute_rolllog(conf):
-    staticdir = ','.join(STATICFILES_DIRS);
-    script_path = os.path.join(staticdir, str('script'))
-    file = os.path.join(script_path, 'roll_log.sh')
-    with open(file) as f:
-        script_content = f.read()
-    f.close()
-     
-    biz_ips = {}
-    biz_ips["ip"] = conf.biz_ip;
-    biz_ips["source"] = conf.biz_ip_source;
-    ip_list = [];
-    ip_list.append(biz_ips);
-    param = '%s %s' % (conf.log_path, conf.log_size)
-    client = get_client_by_user(conf.username)
-    kwargs = {
-        "username":conf.username, 
-        "app_id":conf.biz_id,
-        "content":base64.encodestring(script_content),
-        "script_param":param,
-        "ip_list":ip_list, "type":1, "account":'root',            
-    }
-    result = client.job.fast_execute_script(kwargs);
-    if result['code'] != 0:
-        return render_json({'result':False});
-    task_instance_id = result['data']['taskInstanceId']
-    now = datetime.datetime.now()
-    RollLog.objects.filter(id=conf.id).update(scan_time=now,task_instance_id=task_instance_id,is_get_result=0)
-    #RollLog.objects.create(conf_id=conf.id, task_instance_id=task_instance_id, log_size=-1, scan_time=now,do_time=now,do_result=-1)
-    return render_json({'result':True});
-
-def execute_rolllog_conf(request):
-    rolllog = RollLog.objects.filter(is_get_result=1)
-    if len(rolllog) == 0:
-        return
-    now = datetime.datetime.now()
-    for conf in rolllog:
-        if (conf.scan_time is None) or ((now - conf.scan_time).seconds >= conf.roll_cron):
-            execute_rolllog(conf)
-         
-    return render_json({'result':True});   
-
-def get_script_logs(request):
-    rolllog = RollLog.objects.filter(is_get_result=0)
-    if len(rolllog) == 0:
-        return
-    for log in rolllog:     
-        client = get_client_by_user(log.username)    
-        kwargs = {
-            "task_instance_id": log.task_instance_id         
-        }
-        result = client.job.get_task_ip_log(kwargs);
-        ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
-        exitCode = ipLogContent.get('exitCode')
-        if exitCode == 3:
-            RollLog.objects.filter(id=log.id).update(scan_log_size=-1,scan_result=exitCode,is_get_result=1)  
-        elif exitCode == 1:
-            logContent = ipLogContent.get('logContent') 
-            logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
-            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,scan_result=exitCode,is_get_result=1)
-        else:     
-            startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%dT%H:%M:%S") 
-            logContent = ipLogContent.get('logContent') 
-            logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
-            RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=startTime,is_get_result=1)            
-    return render_json({'result':True});    
-
 def save_rolllog(request):
     username = request.POST.get('username') 
     biz_id = request.POST.get('biz_id') 
@@ -146,8 +79,8 @@ def get_user_ips(request):
                         if osType == "linux":
                             InnerIP = host.get('InnerIP')
                             Source = host.get('Source')
-                            host_ip[InnerIP] = Source;   
-                    ret_num += len(host_ip.keys());                 
+                            host_ip[InnerIP] = Source;                               
+                    ret_num += len(host_ip.keys()); 
                     record["host_ip"] = copy.deepcopy(host_ip);
                 records[str(app_id)] = copy.deepcopy(record);
     except:
@@ -229,7 +162,7 @@ def get_roll_logs(request):
         
     logs = [];
     for log in rolllog:  
-        logs.append({'id':log.id,'biz_name':log.biz_name,'biz_ip':log.biz_ip,'log_path':log.log_path,'log_size':log.log_size,'scan_time':str(log.scan_time),'scan_log_size':log.scan_log_size,'scan_result':log.scan_result,'do_time':str(log.do_time),'do_result':log.do_result})  
+        logs.append({'id':log.id,'biz_name':log.biz_name,'biz_ip':log.biz_ip,'log_path':log.log_path,'log_size':log.log_size,'roll_cron_detail':log.roll_cron_detail, 'scan_time':str(log.scan_time),'scan_log_size':log.scan_log_size,'scan_result':log.scan_result,'do_time':str(log.do_time),'do_result':log.do_result})  
     records = json.dumps(logs) 
          
     return render_json({'result':ret_code, 'text':ret_text,  'renum':ret_num , 'records':records});
