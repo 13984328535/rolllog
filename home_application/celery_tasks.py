@@ -42,7 +42,7 @@ def execute_rolllog_logs():
         result = client.job.get_task_ip_log(kwargs);
         ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
         exitCode = ipLogContent.get('exitCode')
-        if exitCode == 255 or exitCode == 0:     
+        if exitCode == 255 or exitCode == 0 or exitCode == 1:     
             #startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%d %H:%M:%S") 
             logContent = ipLogContent.get('logContent') 
             logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
