@@ -19,8 +19,8 @@ from settings import APP_ID
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # 默认用mysql
-        'NAME': 'rolllog',                        # 数据库名 (默认与APP_ID相同)
-        'USER': 'rolllog',                            # 你的数据库user
+        'NAME': 'rolllogprd',                        # 数据库名 (默认与APP_ID相同)
+        'USER': 'rolllogprd',                            # 你的数据库user
         'PASSWORD': '123456',                        # 你的数据库password
         'HOST': '192.168.1.6',                   		   # 数据库HOST
         'PORT': '3306',                        # 默认3306
