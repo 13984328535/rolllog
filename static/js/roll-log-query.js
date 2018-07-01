@@ -58,10 +58,10 @@ window.onload = get_user_biz;
 								}else{scanExitCode = "文件小于阀值";}
 	                            
 	                            cell = row.insertCell();
-	                            cell.innerHTML=records[i].scan_result == 3? exitCode:((records[i].scan_log_size == -1?"":((records[i].scan_log_size/1024/1024).toFixed(2)+"M"))) ;   	                            
+	                            cell.innerHTML=(records[i].scan_result == 3? scanExitCode:((records[i].scan_log_size == -1?"":((records[i].scan_log_size/1024/1024).toFixed(2)+"M")))) ;   	                            
 	                            
 	                            var doExitCode = "操作异常"
-	                            if (records[i].do_result == -1) { doExitCode = "未扫描";
+	                            if (records[i].do_result == -1) { doExitCode = "未操作";
 								}else if (records[i].do_result == 0) { doExitCode = "操作正常";																
 								}else{doExitCode = "操作异常";}
 	                            
